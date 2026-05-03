@@ -11,13 +11,14 @@ import useLoadStore from "./useLoadStore.js";
 import usePromptStore from "./usePromptStore.js";
 
 const useImageStore1 = create((set, get) => ({
-  img: "",
+  img: null,
+  file: null,
 
   handleImage1: async (e) => {
     const { setLoad } = useLoadStore.getState();
     const { showToast } = useToastStore.getState();
     const { setIsUploaded } = usePromptStore.getState();
-    set({ img: "" });
+    set({ img: "", file: "" });
     setLoad(true);
 
     try {
@@ -32,7 +33,7 @@ const useImageStore1 = create((set, get) => ({
       const data = await uploadImage(img);
       const url = getUrl(data);
 
-      set({ img: url });
+      set({ img: url, file: e.target.files[0] });
       setLoad(false);
 
       await new Promise((resolve) => requestAnimationFrame(resolve));
