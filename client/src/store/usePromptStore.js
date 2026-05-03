@@ -1,34 +1,52 @@
 import { create } from "zustand";
 import useImageStore1 from "./useImageStorecopy.js";
-import { describeImgg } from "../helper/util.js";
+import { buildPrompt, describeImgg } from "../helper/util.js";
 
 const usePromptStore = create((set) => ({
   prompt: "",
   isUploaded: false,
+  generatedPrompt: "",
+
   setPrompt: (newPrompt) => set({ prompt: newPrompt }),
   setIsUploaded: (status) => set({ isUploaded: status }),
-  handleGenerate: async () => {
-    console.log("ns click na");
-    const prompt = await describeImgg();
 
-    set({ prompt });
+  handleGenerate: async () => {
+    const { setUserPref } = selectedSettings.getState();
+
+    console.log("Describing uploaded image......");
+    const describeImage = await describeImgg();
+    console.log("done describing");
+    setUserPref("describeImage", describeImage);
+
+    const userPreference = selectedSettings.getState().userPref;
+
+    console.log("building prompt.....");
+
+    const generatedPrompt = await buildPrompt(userPreference);
+
+    set({ generatedPrompt });
+    console.log("done");
   },
 }));
 
 export const selectedSettings = create((set) => ({
-  imagePurpose: "profile_picture",
-  model: "dall-e-3",
-  background: null,
-  color: null,
-  aspectRatio: "1:1",
-  numberOfImages: 1,
-
-  setImagePurpose: (purpose) => set({ imagePurpose: purpose }),
-  setModel: (model) => set({ model }),
-  setBackground: (background) => set({ background }),
-  setColor: (color) => set({ color }),
-  setAspectRatio: (aspectRatio) => set({ aspectRatio }),
-  setNumberOfImages: (number) => set({ numberOfImages: number }),
+  userPref: {
+    imagePurpose: "All",
+    model: "Realistic",
+    background: "Solid white",
+    color: "#00E5FF",
+    aspectRatio: "1:1",
+    numberOfImages: "auto",
+    describeImage: null,
+  },
+  setUserPref: (key, value) => {
+    set((state) => ({
+      userPref: {
+        ...state.userPref,
+        [key]: value,
+      },
+    }));
+  },
 }));
 
 export default usePromptStore;

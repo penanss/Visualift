@@ -41,7 +41,6 @@ export function isSelectionValid(selections) {
 }
 
 export async function describeImgg(img) {
-  console.log("ns click na");
   const file = useImageStore1.getState().file;
 
   const formData = new FormData();
@@ -60,11 +59,8 @@ export async function describeImgg(img) {
   return res.data.description;
 }
 
-export const buildPromp = async (prompt, userPref) => {
-  const res = await axios.post("http://localhost:5000/api/prompt/build", {
-    prompt,
-    userPref,
-  });
+export const buildPrompt = async (obj) => {
+  const res = await axios.post("http://localhost:5000/api/prompt/build", obj);
 
-  console.log(res.data.data);
+  return res.data.result;
 };

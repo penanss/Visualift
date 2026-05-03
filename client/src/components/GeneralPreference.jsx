@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import usePromptStore, { selectedSettings } from "../store/usePromptStore.js";
 import { buildFinalPrompt } from "../../../backend/src/utils/promptBuilder.js";
-import { buildPromp } from "../helper/util.js";
+import { buildPrompt } from "../helper/util.js";
 import {
   purposes,
   models,
@@ -47,6 +47,7 @@ function GenerationPreferences() {
   );
 
   useEffect(() => {
+    return;
     console.log(userPreference);
     if (!prompt) return;
 
